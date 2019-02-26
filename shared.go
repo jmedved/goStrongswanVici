@@ -10,7 +10,7 @@ type Key struct {
 	ID     string   `json:"id,omitempty"`
 	Typ    string   `json:"type"`
 	Data   string   `json:"data"`
-	Owners []string `json:"owners"`
+	Owners []string `json:"owners,omitempty"`
 }
 
 type UnloadKeyRequest struct {

@@ -12,8 +12,8 @@ type PoolMapping struct {
 	Addrs              string   `json:"addrs"`
 	DNS                []string `json:"dns,omitempty"`
 	NBNS               []string `json:"nbns,omitempty"`
-	ApplicationVersion []string `json:"7,omitempty"`
-	InternalIPv6Prefix []string `json:"18,omitempty"`
+	ApplicationVersion []string `json:"application_version,omitempty"`
+	InternalIPv6Prefix []string `json:"internal_ipv6_prefix,omitempty"`
 }
 
 func (c *ClientConn) LoadPool(ph Pool) error {
