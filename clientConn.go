@@ -43,7 +43,7 @@ func NewClientConn(conn net.Conn) (client *ClientConn) {
 
 // it dial from unix:///var/run/charon.vici
 func NewClientConnFromDefaultSocket() (client *ClientConn, err error) {
-	conn, err := net.Dial("unix", "/var/run/charon.vici")
+	conn, err := net.Dial("unix", "/etc/ipsec.d/run/charon.vici")
 	if err != nil {
 		return
 	}
@@ -57,17 +57,18 @@ func (c *ClientConn) Request(apiname string, request map[string]interface{}) (re
 		msg:  request,
 	})
 	if err != nil {
-		fmt.Printf("error writing segment \n")
-		return
+		return nil, fmt.Errorf("[%s] writeSegment error '%s'", apiname, err)
 	}
 
 	outMsg := c.readResponse()
 	if c.lastError != nil {
-		return nil, c.lastError
+		return nil, fmt.Errorf("[%s] readResponse error '%s'", apiname, c.lastError)
 	}
+
 	if outMsg.typ != stCMD_RESPONSE {
 		return nil, fmt.Errorf("[%s] response error %d", apiname, outMsg.typ)
 	}
+
 	return outMsg.msg, nil
 }
 
@@ -77,7 +78,7 @@ func (c *ClientConn) readResponse() segment {
 		return outMsg
 	case <-time.After(c.ReadTimeout):
 		if c.lastError == nil {
-			c.lastError = fmt.Errorf("Timeout waiting for message response")
+			c.lastError = fmt.Errorf("timeout waiting for message response")
 		}
 		return segment{}
 	}
@@ -85,7 +86,7 @@ func (c *ClientConn) readResponse() segment {
 
 func (c *ClientConn) RegisterEvent(name string, handler func(response map[string]interface{})) (err error) {
 	if c.eventHandlers[name] != nil {
-		return fmt.Errorf("[event %s] register a event twice.", name)
+		return fmt.Errorf("[event %s] registered twice", name)
 	}
 	c.eventHandlers[name] = handler
 	err = writeSegment(c.conn, segment{
@@ -97,7 +98,6 @@ func (c *ClientConn) RegisterEvent(name string, handler func(response map[string
 		return
 	}
 	outMsg := c.readResponse()
-	//fmt.Printf("registerEvent %#v\n", outMsg)
 	if c.lastError != nil {
 		delete(c.eventHandlers, name)
 		return c.lastError

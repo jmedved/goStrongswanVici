@@ -9,38 +9,41 @@ type Connection struct {
 }
 
 type IKEConf struct {
-	LocalAddrs  []string               `json:"local_addrs"`
+	LocalAddrs  []string               `json:"local_addrs,omitempty"`
 	RemoteAddrs []string               `json:"remote_addrs,omitempty"`
 	Proposals   []string               `json:"proposals,omitempty"`
-	Version     string                 `json:"version"` //1 for ikev1, 0 for ikev1 & ikev2
-	Encap       string                 `json:"encap"`   //yes,no
-	KeyingTries string                 `json:"keyingtries"`
-	RekeyTime   string                 `json:"rekey_time"`
+	Version     string                 `json:"version,omitempty"` // 1 for ikev1, 0 for ikev1 & ikev2
+	Encap       string                 `json:"encap,omitempty"`   // yes,no
+	KeyingTries string                 `json:"keyingtries,omitempty"`
+	RekeyTime   string                 `json:"rekey_time,omitempty"`
 	DPDDelay    string                 `json:"dpd_delay,omitempty"`
-	LocalAuth   AuthConf               `json:"local"`
-	RemoteAuth  AuthConf               `json:"remote"`
+	Aggressive  string                 `json:"aggressive,omitempty"`
+	Vips        string                 `json:"vips,omitempty"`
+	LocalAuth   AuthConf               `json:"local,omitempty"`
+	RemoteAuth  AuthConf               `json:"remote,omitempty"`
 	Pools       []string               `json:"pools,omitempty"`
-	Children    map[string]ChildSAConf `json:"children"`
+	Children    map[string]ChildSAConf `json:"children,omitempty"`
 }
 
 type AuthConf struct {
-	ID         string `json:"id"`
-	Round      string `json:"round,omitempty"`
-	AuthMethod string `json:"auth"` // (psk|pubkey)
-	EAP_ID     string `json:"eap_id,omitempty"`
+	ID         string   `json:"id,omitempty"`
+	Round      string   `json:"round,omitempty"`
+	AuthMethod string   `json:"auth"` // (psk|pubkey)
+	EapId      string   `json:"eap_id,omitempty"`
+	Certs      []string `json:"certs,omitempty"`
 }
 
 type ChildSAConf struct {
-	Local_ts      []string `json:"local_ts"`
-	Remote_ts     []string `json:"remote_ts"`
-	ESPProposals  []string `json:"esp_proposals,omitempty"` //aes128-sha1_modp1024
-	StartAction   string   `json:"start_action"`            //none,trap,start
-	CloseAction   string   `json:"close_action"`
+	Local_ts      []string `json:"local_ts,omitempty"`
+	Remote_ts     []string `json:"remote_ts,omitempty"`
+	ESPProposals  []string `json:"esp_proposals,omitempty"` // aes128-sha1_modp1024
+	StartAction   string   `json:"start_action,omitempty"`  // none,trap,start
+	CloseAction   string   `json:"close_action,omitempty"`
 	ReqID         string   `json:"reqid,omitempty"`
-	RekeyTime     string   `json:"rekey_time"`
+	RekeyTime     string   `json:"rekey_time,omitempty"`
 	ReplayWindow  string   `json:"replay_window,omitempty"`
-	Mode          string   `json:"mode"`
-	InstallPolicy string   `json:"policies"`
+	Mode          string   `json:"mode,omitempty"`
+	InstallPolicy string   `json:"policies,omitempty"`
 	UpDown        string   `json:"updown,omitempty"`
 	Priority      string   `json:"priority,omitempty"`
 	MarkIn        string   `json:"mark_in,omitempty"`
@@ -53,15 +56,19 @@ func (c *ClientConn) LoadConn(conn *map[string]IKEConf) error {
 	requestMap := &map[string]interface{}{}
 
 	err := ConvertToGeneral(conn, requestMap)
-
 	if err != nil {
-		return fmt.Errorf("error creating request: %v", err)
+		return fmt.Errorf("error creating request: %#v", err)
 	}
 
+	fmt.Printf("\n**** general vici request: %#v\n", *requestMap)
+
 	msg, err := c.Request("load-conn", *requestMap)
+	if err != nil {
+		return fmt.Errorf("error sending request: %s", err)
+	}
 
 	if msg["success"] != "yes" {
-		return fmt.Errorf("unsuccessful LoadConn: %v", msg["errmsg"])
+		return fmt.Errorf("unsuccessful LoadConn: %s", msg["errmsg"])
 	}
 
 	return nil
