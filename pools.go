@@ -34,3 +34,22 @@ func (c *ClientConn) LoadPool(ph Pool) error {
 
 	return nil
 }
+
+type UnloadPoolRequest struct {
+	Name string `json:"name"`
+}
+
+func (c *ClientConn) UnloadPool(r *UnloadPoolRequest) error {
+	reqMap := &map[string]interface{}{}
+	ConvertToGeneral(r, reqMap)
+	msg, err := c.Request("unload-pool", *reqMap)
+	if err != nil {
+		return err
+	}
+
+	if msg["success"] != "yes" {
+		return fmt.Errorf("[Unload-Pool] %s", msg["errmsg"])
+	}
+
+	return nil
+}
