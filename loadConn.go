@@ -52,7 +52,7 @@ type ChildSAConf struct {
 	LifeTime      string   `json:"life_time,omitempty"`
 }
 
-func (c *ClientConn) LoadConn(conn *map[string]IKEConf) error {
+func (c *ClientConn) LoadConn(conn *map[string]*IKEConf) error {
 	requestMap := &map[string]interface{}{}
 
 	err := ConvertToGeneral(conn, requestMap)

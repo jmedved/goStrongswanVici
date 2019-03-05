@@ -42,8 +42,12 @@ func NewClientConn(conn net.Conn) (client *ClientConn) {
 }
 
 // it dial from unix:///var/run/charon.vici
-func NewClientConnFromDefaultSocket() (client *ClientConn, err error) {
-	conn, err := net.Dial("unix", "/etc/ipsec.d/run/charon.vici")
+func NewClientConnFromDefaultSocket(address ...string) (client *ClientConn, err error) {
+	addr := "/var/run/charon.vici"
+	if len(address) > 0 {
+		addr = address[0]
+	}
+	conn, err := net.Dial("unix", addr)
 	if err != nil {
 		return
 	}
