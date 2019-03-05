@@ -47,7 +47,7 @@ func TestConnection(t *testing.T) {
 		Children:    childConfMap,
 		Encap:       "no",
 	}
-	ikeConfMap := map[string]IKEConf{"test-connection": ikeConf}
+	ikeConfMap := map[string]*IKEConf{"test-connection": &ikeConf}
 
 	// Add connection.
 	err = client.LoadConn(&ikeConfMap)
