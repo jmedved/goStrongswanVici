@@ -16,9 +16,12 @@ type IKEConf struct {
 	Encap       string                 `json:"encap,omitempty"`   // yes,no
 	KeyingTries string                 `json:"keyingtries,omitempty"`
 	RekeyTime   string                 `json:"rekey_time,omitempty"`
+	ReauthTime  string                 `json:"reauth_time,omitempty"`
 	DPDDelay    string                 `json:"dpd_delay,omitempty"`
 	Aggressive  string                 `json:"aggressive,omitempty"`
 	Vips        string                 `json:"vips,omitempty"`
+	Mobike      string                 `json:"mobike,omitempty"`
+	SendCertreq string                 `json:"send_certreq,omitempty"`
 	LocalAuth   AuthConf               `json:"local,omitempty"`
 	RemoteAuth  AuthConf               `json:"remote,omitempty"`
 	Pools       []string               `json:"pools,omitempty"`
@@ -41,6 +44,8 @@ type ChildSAConf struct {
 	CloseAction   string   `json:"close_action,omitempty"`
 	ReqID         string   `json:"reqid,omitempty"`
 	RekeyTime     string   `json:"rekey_time,omitempty"`
+	RekeyBytes    string   `json:"rekey_bytes,omitempty"`
+	RekeyPackets  string   `json:"rekey_packets,omitempty"`
 	ReplayWindow  string   `json:"replay_window,omitempty"`
 	Mode          string   `json:"mode,omitempty"`
 	InstallPolicy string   `json:"policies,omitempty"`
