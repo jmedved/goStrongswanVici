@@ -361,7 +361,7 @@ func printBuffer(b *bytes.Buffer) {
 		if c > ' ' && c <= '~' {
 			fmt.Printf("'%c',", c)
 		} else {
-			fmt.Printf("%d, ", c)
+			fmt.Printf("%d, ", int8(c))
 		}
 	}
 	fmt.Printf("\n")
