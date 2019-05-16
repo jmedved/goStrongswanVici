@@ -158,10 +158,10 @@ func prettyprint(b []byte) string {
 	return string(out.Bytes())
 }
 
-type monitorCallBack func(event string, info interface{})
+type MonitorCallBack func(event string, info interface{})
 
 
-func handleIkeUpDown(eventName string, callback monitorCallBack, response map[string]interface{}) {
+func handleIkeUpDown(eventName string, callback MonitorCallBack, response map[string]interface{}) {
 	event := &EventIkeUpDown{}
 	event.Ike = map[string]*EventIkeSAUpDown{}
 	//we need to marshall all ikes manual because json uses connections names as key
@@ -178,7 +178,7 @@ func handleIkeUpDown(eventName string, callback monitorCallBack, response map[st
 	callback(eventName, event)
 }
 
-func handleIkeRekey(eventName string, callback monitorCallBack, response map[string]interface{}) {
+func handleIkeRekey(eventName string, callback MonitorCallBack, response map[string]interface{}) {
 	event := &EventIkeRekey{}
 	event.Ike = map[string]*EventIkeRekeyPair{}
 	//we need to marshall all ikes manual because json uses connections names as key
@@ -191,7 +191,7 @@ func handleIkeRekey(eventName string, callback monitorCallBack, response map[str
 	callback(eventName, event)
 }
 
-func handleChildUpDown(eventName string, callback monitorCallBack, response map[string]interface{}) {
+func handleChildUpDown(eventName string, callback MonitorCallBack, response map[string]interface{}) {
 	event := &EventChildUpDown{}
 	event.Ike = map[string]*EventIkeSAUpDown{}
 	//we need to marshall all ikes manual because json uses connections names as key
@@ -208,7 +208,7 @@ func handleChildUpDown(eventName string, callback monitorCallBack, response map[
 	callback(eventName, event)
 }
 
-func handleChildRekey(eventName string, callback monitorCallBack, response map[string]interface{}) {
+func handleChildRekey(eventName string, callback MonitorCallBack, response map[string]interface{}) {
 	event := &EventChildRekey{}
 	event.Ike = map[string]*EventIkeRekeySA{}
 	//we need to marshall all ikes manual because json uses connections names as key
@@ -221,7 +221,7 @@ func handleChildRekey(eventName string, callback monitorCallBack, response map[s
 	callback(eventName, event)
 }
 
-func (c *ClientConn) MonitorSA(callback monitorCallBack,watchdog time.Duration) (err error) {
+func (c *ClientConn) MonitorSA(callback MonitorCallBack,watchdog time.Duration) (err error) {
 	//register event
 	c.RegisterEvent(EVENT_CHILD_UPDOWN, func(response map[string]interface{}) {
 		//dumpResponse(response)
