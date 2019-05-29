@@ -100,7 +100,12 @@ func dumpFields(b *bytes.Buffer) {
 	}
 
 	if mType != cmdRequest && mType != cmdResponse && mType != event {
+		fmt.Printf("returning, eventType %d\n", mType)
 		return
+	}
+
+	if mType == event {
+		dumpBytes(b)
 	}
 
 	inList := false
