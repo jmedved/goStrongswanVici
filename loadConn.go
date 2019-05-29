@@ -64,9 +64,7 @@ func (c *ClientConn) LoadConn(conn *map[string]*IKEConf) error {
 	if err != nil {
 		return fmt.Errorf("error creating request: %#v", err)
 	}
-
-	fmt.Printf("\n**** general vici request: %#v\n", *requestMap)
-
+	
 	msg, err := c.Request("load-conn", *requestMap)
 	if err != nil {
 		return fmt.Errorf("error sending request: %s", err)
