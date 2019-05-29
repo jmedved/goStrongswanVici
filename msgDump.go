@@ -90,7 +90,7 @@ func dumpFields(b *bytes.Buffer) {
 	mType := msg[0]
 	fmt.Printf("MsgType: %s\n", msgTypes[mType])
 
-	if mType == cmdRequest || mType == evtRegister || mType == evtUnregister {
+	if mType == cmdRequest || mType == evtRegister || mType == evtUnregister || mType == event {
 		msgNameLen := msg[1]
 		msgName := msg[2 : 2+msgNameLen]
 		fmt.Printf("MsgName: '%s'\n", msgName)
