@@ -10,7 +10,7 @@ type Key struct {
 	ID     string   `json:"id,omitempty"`
 	Typ    string   `json:"type"`
 	Data   string   `json:"data"`
-	Owners []string `json:"owners"`
+	Owners []string `json:"owners,omitempty"`
 }
 
 type UnloadKeyRequest struct {
@@ -26,9 +26,14 @@ func (c *ClientConn) LoadShared(key *Key) error {
 	requestMap := &map[string]interface{}{}
 
 	err := ConvertToGeneral(key, requestMap)
-
 	if err != nil {
 		return fmt.Errorf("error creating request: %v", err)
+	}
+
+	// ConvertToGeneral() creates ASCII representation of binary data.
+	// We need to put the original binary data back on the map
+	if _, ok := (*requestMap)["data"]; ok {
+		(*requestMap)["data"] = key.Data
 	}
 
 	msg, err := c.Request("load-shared", *requestMap)

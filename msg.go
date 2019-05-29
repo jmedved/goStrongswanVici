@@ -93,7 +93,7 @@ func writeSegment(w io.Writer, msg segment) (err error) {
 		return fmt.Errorf("[writeSegment] error writing to binary: '%s'", err)
 	}
 
-	printBuffer(buf)
+	printBuffer("TO", buf)
 	_, err = buf.WriteTo(w)
 	if err != nil {
 		return fmt.Errorf("[writeSegment] error writing to buffer: '%s'", err)
@@ -108,8 +108,20 @@ func readSegment(inR io.Reader) (msg segment, err error) {
 	if err != nil {
 		return
 	}
+
+	buf := make([]byte, length)
+	nRead, err := io.ReadFull(inR, buf)
+	if uint32(nRead) > length {
+		fmt.Printf("there is more data, nRead: %d, length %d", nRead, length)
+	}
+	if err != nil {
+		fmt.Printf("Error reading %d bytes from VICI, error '%s'", nRead, err)
+	}
+
+	printBuffer("FROM", bytes.NewBuffer(buf))
+
 	r := bufio.NewReader(&io.LimitedReader{
-		R: inR,
+		R: bytes.NewReader(buf),
 		N: int64(length),
 	})
 
@@ -353,16 +365,4 @@ func readMap(r *bufio.Reader, isRoot bool) (msg map[string]interface{}, err erro
 		}
 	}
 	return
-}
-
-func printBuffer(b *bytes.Buffer) {
-	fmt.Printf("***** byte buffer (len %d/%d: ", b.Len(), len(b.Bytes()))
-	for _, c := range b.Bytes() {
-		if c > ' ' && c <= '~' {
-			fmt.Printf("'%c',", c)
-		} else {
-			fmt.Printf("%d, ", c)
-		}
-	}
-	fmt.Printf("\n")
 }
