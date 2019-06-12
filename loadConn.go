@@ -39,6 +39,8 @@ type AuthConf struct {
 type ChildSAConf struct {
 	Local_ts      []string `json:"local_ts,omitempty"`
 	Remote_ts     []string `json:"remote_ts,omitempty"`
+	Local_tso     []string `json:"local-ts,omitempty"`      // VICI has different name for set and get of local_ts
+	Remote_tso    []string `json:"remote-ts,omitempty"`     // VICI has different name for set and get of remote_ts
 	ESPProposals  []string `json:"esp_proposals,omitempty"` // aes128-sha1_modp1024
 	StartAction   string   `json:"start_action,omitempty"`  // none,trap,start
 	CloseAction   string   `json:"close_action,omitempty"`
