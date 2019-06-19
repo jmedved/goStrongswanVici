@@ -8,7 +8,7 @@ import (
 var dumpLevel uint32
 
 func init() {
-	dumpLevel = 3
+	dumpLevel = 0
 }
 
 func SetDumpLevel(lvl uint32) {
