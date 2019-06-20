@@ -38,11 +38,11 @@ type MallInfo struct {
 }
 
 type Stats struct {
-	Uptime  Uptime  `json:"uptime"`
-	Workers Workers `json:"workers"`
-	Queues  Queues  `json:"queues"`
-
+	Uptime    Uptime   `json:"uptime"`
+	Workers   Workers  `json:"workers"`
+	Queues    Queues   `json:"queues"`
 	Scheduled string   `json:"scheduled"`
+	IkeSas    IkeSas   `json:"ikesas"`
 	Plugins   []string `json:"plugins"`
 	MallInfo  MallInfo `json:"mallinfo"`
 }
